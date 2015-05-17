@@ -1,6 +1,7 @@
 api_key   = "[your key goes here]"
 levels    = "1,2,3,4,5,6,7,8,9,10,11"
-threshold = 5
+error_threshold = 3 # display it if more than 3 errors have been made
+correct_threshold = 7 # don't display it if the last 7 readings AND the last 7 meanings were correct
 
 try:
     # For Python 3.0 and later
@@ -17,8 +18,8 @@ data = json.loads(str(response.read()))
 filtered_data = []
 
 for item in data['requested_information']:
-    if item['user_specific']['reading_incorrect'] + item['user_specific']['meaning_incorrect'] > threshold:
-        u = item['user_specific']
+    u = item['user_specific']
+    if u['reading_incorrect'] + u['meaning_incorrect'] > error_threshold and u['meaning_current_streak']<correct_threshold and u['reading_current_streak']<correct_threshold:
         filtered_data.append([item['character'],item['kana'],item['meaning'],
                              int(u['reading_incorrect']),int(u['reading_correct']),
                              int(u['meaning_incorrect']),int(u['meaning_correct']),

@@ -1633,14 +1633,14 @@ div#notebook {
   div.cell {
     display: block;
     page-break-inside: avoid;
-  } 
-  div.output_wrapper { 
-    display: block;
-    page-break-inside: avoid; 
   }
-  div.output { 
+  div.output_wrapper {
     display: block;
-    page-break-inside: avoid; 
+    page-break-inside: avoid;
+  }
+  div.output {
+    display: block;
+    page-break-inside: avoid;
   }
 }
 </style>
@@ -1679,13 +1679,14 @@ div#notebook {
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[104]:
+In&nbsp;[18]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
 <div class="highlight"><pre><span class="n">api_key</span>   <span class="o">=</span> <span class="s">&quot;[your key goes here]&quot;</span>
 <span class="n">levels</span>    <span class="o">=</span> <span class="s">&quot;1,2,3,4,5,6,7,8,9,10,11&quot;</span>
-<span class="n">threshold</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">error_threshold</span> <span class="o">=</span> <span class="mi">3</span> <span class="c"># display it if more than 3 errors have been made</span>
+<span class="n">correct_threshold</span> <span class="o">=</span> <span class="mi">7</span> <span class="c"># don&#39;t display it if the last 7 readings AND the last 7 meanings were correct</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="c"># For Python 3.0 and later</span>
@@ -1705,7 +1706,7 @@ In&nbsp;[104]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[105]:
+In&nbsp;[12]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
@@ -1721,20 +1722,20 @@ In&nbsp;[105]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[106]:
+In&nbsp;[19]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
 <div class="highlight"><pre><span class="n">filtered_data</span> <span class="o">=</span> <span class="p">[]</span>
 
 <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="s">&#39;requested_information&#39;</span><span class="p">]:</span>
-    <span class="k">if</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;user_specific&#39;</span><span class="p">][</span><span class="s">&#39;reading_incorrect&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;user_specific&#39;</span><span class="p">][</span><span class="s">&#39;meaning_incorrect&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">:</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;user_specific&#39;</span><span class="p">]</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">item</span><span class="p">[</span><span class="s">&#39;user_specific&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">u</span><span class="p">[</span><span class="s">&#39;reading_incorrect&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">u</span><span class="p">[</span><span class="s">&#39;meaning_incorrect&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">error_threshold</span> <span class="ow">and</span> <span class="n">u</span><span class="p">[</span><span class="s">&#39;meaning_current_streak&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="n">correct_threshold</span> <span class="ow">and</span> <span class="n">u</span><span class="p">[</span><span class="s">&#39;reading_current_streak&#39;</span><span class="p">]</span><span class="o">&lt;</span><span class="n">correct_threshold</span><span class="p">:</span>
         <span class="n">filtered_data</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">item</span><span class="p">[</span><span class="s">&#39;character&#39;</span><span class="p">],</span><span class="n">item</span><span class="p">[</span><span class="s">&#39;kana&#39;</span><span class="p">],</span><span class="n">item</span><span class="p">[</span><span class="s">&#39;meaning&#39;</span><span class="p">],</span>
                              <span class="nb">int</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="s">&#39;reading_incorrect&#39;</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="s">&#39;reading_correct&#39;</span><span class="p">]),</span>
                              <span class="nb">int</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="s">&#39;meaning_incorrect&#39;</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="s">&#39;meaning_correct&#39;</span><span class="p">]),</span>
                              <span class="nb">int</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="s">&#39;reading_incorrect&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">u</span><span class="p">[</span><span class="s">&#39;meaning_incorrect&#39;</span><span class="p">])])</span>
-<span class="n">sorted_data</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">filtered_data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>  
+<span class="n">sorted_data</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">filtered_data</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="p">[</span><span class="mi">7</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -1745,13 +1746,13 @@ In&nbsp;[106]:
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">
-In&nbsp;[111]:
+In&nbsp;[20]:
 </div>
 <div class="inner_cell">
     <div class="input_area">
 <div class="highlight"><pre><span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sorted_data</span><span class="p">:</span>
     <span class="n">char</span><span class="p">,</span> <span class="n">kana</span><span class="p">,</span> <span class="n">meaning</span><span class="p">,</span> <span class="n">ir</span><span class="p">,</span> <span class="n">cr</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="n">cm</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">item</span>
-    
+
     <span class="k">print</span><span class="p">(</span><span class="s">&quot;errors: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;, reading: &quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">cr</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;/&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">cr</span><span class="o">+</span><span class="n">ir</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;, meaning:&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">cm</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;/&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">cm</span><span class="o">+</span><span class="n">im</span><span class="p">)</span><span class="o">+</span><span class="s">&quot;, &quot;</span><span class="o">+</span><span class="n">char</span><span class="o">+</span><span class="s">u&#39;</span><span class="se">\uFF08</span><span class="s">&#39;</span><span class="o">+</span><span class="n">kana</span><span class="o">+</span><span class="s">u&#39;</span><span class="se">\uFF09</span><span class="s">&#39;</span> <span class="o">+</span> <span class="s">&quot; &quot;</span><span class="o">+</span><span class="n">meaning</span><span class="p">)</span>
 </pre></div>
 
@@ -1766,166 +1767,49 @@ In&nbsp;[111]:
 <div class="output_area"><div class="prompt"></div>
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>
-errors: 21, reading: 29/44, meaning:29/35, 小さい（ちいさい） small, little
-errors: 20, reading: 33/47, meaning:33/39, 少ない（すくない） a few, few, scarce
-errors: 20, reading: 36/38, meaning:36/54, 年来（ねんらい） for some years, for years, longstanding
-errors: 18, reading: 32/39, meaning:32/43, 切れる（きれる） to be cut
-errors: 18, reading: 33/43, meaning:33/41, 外れる（はずれる） to be disconnected, to come off, to be out, to be off
-errors: 17, reading: 31/47, meaning:31/32, 土（つち） soil, earth, ground, dirt
-errors: 17, reading: 31/46, meaning:31/33, 名字（みょうじ） surname, last name, family name
 errors: 16, reading: 25/35, meaning:25/31, 生（なま） fresh, raw
-errors: 16, reading: 26/42, meaning:26/26, 何月（なんがつ） what month, which month
-errors: 16, reading: 31/46, meaning:31/32, 主人（しゅじん） head of household, husband, head of a household, head of the household, landlord, master
-errors: 15, reading: 37/52, meaning:37/37, 木（き） tree, wood
-errors: 14, reading: 32/45, meaning:32/33, 女子（じょし） girl
 errors: 14, reading: 21/26, meaning:21/30, 生きる（いきる） to live, to be alive, to exist
 errors: 13, reading: 25/33, meaning:25/30, 年中（ねんじゅう） year round, all year, whole year, throughout the year, all year round
 errors: 13, reading: 30/36, meaning:30/37, 足りる（たりる） to be enough, to be sufficient, to suffice
-errors: 13, reading: 26/38, meaning:26/27, 中止（ちゅうし） suspension, stoppage, discontinuance, interruption
 errors: 13, reading: 25/33, meaning:25/30, 用いる（もちいる） to utilize, to use, to utilise
-errors: 12, reading: 31/43, meaning:31/31, 王子（おうじ） prince
-errors: 12, reading: 24/31, meaning:24/29, 分（ぶん, ふん） minute, part
-errors: 12, reading: 27/39, meaning:27/27, 外（そと） outside
-errors: 12, reading: 30/41, meaning:30/31, 人口（じんこう） population
-errors: 12, reading: 32/43, meaning:32/33, 大した（たいした） considerable, great, important, big deal
-errors: 12, reading: 22/28, meaning:22/28, 先日（せんじつ） the other day, a few days ago, other day
 errors: 12, reading: 23/32, meaning:23/26, 自立（じりつ） independence
 errors: 12, reading: 20/26, meaning:20/26, 行う（おこなう） to carry out a task, to carry out, to perform, to perform a task, to do a task
-errors: 12, reading: 26/38, meaning:26/26, 入場（にゅうじょう） entrance, admission, entering
 errors: 11, reading: 21/29, meaning:21/24, 立つ（たつ） to stand
 errors: 11, reading: 23/33, meaning:23/24, 来る（くる） to come
-errors: 11, reading: 25/36, meaning:25/25, 牛（うし） cow
 errors: 11, reading: 24/34, meaning:24/25, 末（すえ） the end, end
 errors: 11, reading: 18/27, meaning:18/20, 他（ほか） other
-errors: 11, reading: 24/35, meaning:24/24, 何日（なんにち） how many days, what day, which day
-errors: 11, reading: 30/41, meaning:30/30, 山（やま） mountain
-errors: 11, reading: 28/39, meaning:28/28, 一つ（ひとつ） one thing
-errors: 11, reading: 19/30, meaning:19/19, お父さん（おとうさん） father
-errors: 11, reading: 19/21, meaning:19/28, 近づく（ちかづく） to get close, to approach, to draw near, to near, to bring near
-errors: 11, reading: 26/27, meaning:26/36, 近く（ちかく） near, neighbourhood, neighborhood, vicinity
-errors: 10, reading: 19/28, meaning:19/20, 住人（じゅうにん） resident, inhabitant, dweller
-errors: 10, reading: 19/28, meaning:19/20, 元（もと） origin
-errors: 10, reading: 20/29, meaning:20/21, 目次（もくじ） table of contents
-errors: 10, reading: 29/37, meaning:29/31, 力（ちから） power, strength
-errors: 10, reading: 30/40, meaning:30/30, 六つ（むっつ） six things
-errors: 10, reading: 24/32, meaning:24/26, 文（ぶん） writing, sentence
-errors: 10, reading: 25/35, meaning:25/25, 光（ひかり） light, sunlight
-errors: 10, reading: 19/27, meaning:19/21, 子牛（こうし） calf, baby cow
-errors: 10, reading: 28/30, meaning:28/36, 王女（おうじょ） princess
 errors: 10, reading: 26/28, meaning:26/34, 交ぜる（まぜる） to mix, to mix something
-errors: 10, reading: 21/24, meaning:21/28, 下がる（さがる） to hang down, to hang
-errors: 10, reading: 17/21, meaning:17/23, 分ける（わける） to separate, to divide, to part, to split
-errors: 10, reading: 18/24, meaning:18/22, 切手（きって） postage stamp, stamp
-errors: 9, reading: 23/32, meaning:23/23, 土地（とち） land
-errors: 9, reading: 16/21, meaning:16/20, 公用（こうよう） government business, official business
-errors: 9, reading: 19/27, meaning:19/20, 正直（しょうじき） honest
-errors: 9, reading: 20/28, meaning:20/21, 全国（ぜんこく） nationwide, national, countrywide
-errors: 9, reading: 25/33, meaning:25/26, 上手（じょうず） good at, skillful, skilled at, skilled
-errors: 9, reading: 20/29, meaning:20/20, 毛（け） fur, hair
-errors: 9, reading: 21/28, meaning:21/23, 休日（きゅうじつ） holiday
-errors: 9, reading: 26/35, meaning:26/26, 口（くち） mouth
-errors: 9, reading: 24/30, meaning:24/27, 生む（うむ） to give birth
-errors: 9, reading: 19/28, meaning:19/19, 四角（しかく） square
-errors: 9, reading: 22/25, meaning:22/28, 後で（あとで） after, afterwards, later
-errors: 9, reading: 23/32, meaning:23/23, 内（うち） inside, within
-errors: 8, reading: 22/30, meaning:22/22, 白（しろ） white
-errors: 8, reading: 18/22, meaning:18/22, 半分（はんぶん） half
-errors: 8, reading: 21/28, meaning:21/22, 一千（いっせん） one thousand
-errors: 8, reading: 18/22, meaning:18/22, 近日（きんじつ） soon, in a few days, coming days
-errors: 8, reading: 17/25, meaning:17/17, 夜（よる） night, evening
-errors: 8, reading: 16/17, meaning:16/23, 開発（かいはつ） development
-errors: 8, reading: 17/22, meaning:17/20, 助手（じょしゅ） assistant, helper, aide
 errors: 8, reading: 12/15, meaning:12/17, 仕事（しごと） job, work, occupation
-errors: 8, reading: 17/20, meaning:17/22, 人生（じんせい） one&apos;s life, human life
-errors: 8, reading: 18/23, meaning:18/21, 中古（ちゅうこ） second hand, used, secondhand
 errors: 8, reading: 16/23, meaning:16/17, 不正（ふせい） injustice, unfairness
-errors: 8, reading: 23/27, meaning:23/27, 代用（だいよう） substitution
-errors: 8, reading: 24/32, meaning:24/24, 七つ（ななつ） seven things
-errors: 8, reading: 16/24, meaning:16/16, 心（こころ） heart
-errors: 8, reading: 24/32, meaning:24/24, 生活（せいかつ） life, livelihood
-errors: 8, reading: 18/24, meaning:18/20, 大作（たいさく） an epic, epic, epic saga, masterpiece, masterwork, magnum opus
-errors: 8, reading: 14/16, meaning:14/20, 努力（どりょく） great effort, exertion, grueling effort
-errors: 8, reading: 19/20, meaning:19/26, 向ける（むける） to turn towards, to point, to turn (something) towards
-errors: 7, reading: 14/18, meaning:14/17, 町（まち） town
-errors: 7, reading: 21/28, meaning:21/21, 村（むら） village, rural town
-errors: 7, reading: 17/22, meaning:17/19, 次（つぎ） next
 errors: 7, reading: 17/18, meaning:17/23, 会社（かいしゃ） company, corporation, the office
-errors: 7, reading: 22/23, meaning:22/28, 〜台（だい） big machine, big device, machine, device, machine counter
 errors: 7, reading: 17/21, meaning:17/20, 強力（きょうりょく） strength, strong, powerful
-errors: 7, reading: 15/22, meaning:15/15, 屋上（おくじょう） rooftop, housetop
-errors: 7, reading: 23/30, meaning:23/23, 女（おんな） woman, female
-errors: 7, reading: 22/29, meaning:22/22, 四百（よんひゃく） four hundred
-errors: 7, reading: 22/29, meaning:22/22, 日（ひ） sun, day
-errors: 7, reading: 18/25, meaning:18/18, 北（きた） north
-errors: 7, reading: 11/14, meaning:11/15, 引き分け（ひきわけ） tie, draw
-errors: 7, reading: 19/25, meaning:19/20, 主に（おもに） mainly, primarily
-errors: 7, reading: 23/30, meaning:23/23, 五つ（いつつ） five things
-errors: 7, reading: 19/26, meaning:19/19, 先（さき） previous, ahead, past, former
-errors: 7, reading: 21/27, meaning:21/22, 作用（さよう） action, effect, operation
-errors: 7, reading: 21/26, meaning:21/23, 走行（そうこう） traveling, travelling
 errors: 7, reading: 14/20, meaning:14/15, 手作り（てづくり） handmade
 errors: 7, reading: 19/24, meaning:19/21, 方向（ほうこう） direction
-errors: 7, reading: 19/21, meaning:19/24, 出来上がる（できあがる） to be finished, to be completed
-errors: 7, reading: 16/22, meaning:16/17, 直行（ちょっこう） nonstop, direct
-errors: 7, reading: 17/24, meaning:17/17, 入所（にゅうしょ） admission, entrance
-errors: 7, reading: 15/22, meaning:15/15, 数える（かぞえる） to count
 errors: 7, reading: 14/20, meaning:14/15, 部屋（へや） room
-errors: 7, reading: 14/17, meaning:14/18, 早速（さっそく） at once, immediately, without delay, right away, right now
-errors: 7, reading: 12/14, meaning:12/17, 気付く（きづく） to realize, to notice, to realise
-errors: 7, reading: 22/24, meaning:22/27, 外れ（はずれ） extremity, furthest point, end, outskirts, outer limits, edge, miss, failure
-errors: 7, reading: 19/19, meaning:19/26, 回す（まわす） to turn, to rotate, to turn something, to rotate something
 errors: 7, reading: 17/21, meaning:17/20, 氏名（しめい） full name, first and last name
-errors: 7, reading: 15/22, meaning:15/15, 店（みせ） shop, store
 errors: 7, reading: 13/18, meaning:13/15, 通う（かよう） to commute, to attend, to go back and forth
-errors: 6, reading: 17/19, meaning:17/21, 近年（きんねん） recent years
-errors: 6, reading: 16/22, meaning:16/16, 早い（はやい） early, fast, quick
-errors: 6, reading: 16/22, meaning:16/16, 血（ち） blood
 errors: 6, reading: 15/19, meaning:15/17, 人気（にんき） popular
-errors: 6, reading: 17/19, meaning:17/21, 作文（さくぶん） composition, writing, essay
-errors: 6, reading: 16/22, meaning:16/16, 毎日（まいにち） every day, daily
-errors: 6, reading: 12/18, meaning:12/12, 運ぶ（はこぶ） to carry
 errors: 6, reading: 12/14, meaning:12/16, 発表（はっぴょう） announcement
-errors: 6, reading: 20/25, meaning:20/21, 戸口（とぐち） doorway
-errors: 6, reading: 18/24, meaning:18/18, 地上（ちじょう） above ground
 errors: 6, reading: 19/24, meaning:19/20, 〜人（にん） number of people, people, people counter
-errors: 6, reading: 21/26, meaning:21/22, 大人（おとな） adult
-errors: 6, reading: 17/20, meaning:17/20, 入り口（いりぐち） entrance
-errors: 6, reading: 20/26, meaning:20/20, 四月（しがつ） april
-errors: 6, reading: 15/17, meaning:15/19, 久しい（ひさしい） long time
-errors: 6, reading: 19/24, meaning:19/20, 太い（ふとい） fat
-errors: 6, reading: 17/22, meaning:17/18, 一打（いちだ） strike, stroke, blow
-errors: 6, reading: 16/18, meaning:16/20, 一気（いっき） one breath, one go, one sitting
-errors: 6, reading: 16/21, meaning:16/17, 同日（どうじつ） same day, the same day
-errors: 6, reading: 18/20, meaning:18/22, 先ず（まず） first of all, to start with, firstly, to begin with
-errors: 6, reading: 18/24, meaning:18/18, 不足（ふそく） shortage, physical shortage, insufficient, not sufficient, not enough
-errors: 6, reading: 21/27, meaning:21/21, 市立（しりつ） municipal, city
-errors: 6, reading: 20/26, meaning:20/20, 上（うえ） up, above
-errors: 6, reading: 16/17, meaning:16/21, 早々（そうそう） as soon as, just after, immediately after
-errors: 6, reading: 20/23, meaning:20/23, 気に入る（きにいる） to be pleased with, to be satisfied with, to be happy with, to be pleased, to be satisfied, to be happy
-errors: 6, reading: 15/21, meaning:15/15, 会う（あう） to meet, to encounter
-errors: 6, reading: 19/20, meaning:19/24, 先回り（さきまわり） anticipation, anticipate
-errors: 6, reading: 17/23, meaning:17/17, 弟（おとうと） younger brother, little brother
-errors: 6, reading: 15/21, meaning:15/15, 人形（にんぎょう） doll, puppet
-errors: 6, reading: 17/17, meaning:17/23, 年次（ねんじ） annual, yearly
-errors: 6, reading: 15/17, meaning:15/19, 自由（じゆう） freedom
-errors: 6, reading: 16/20, meaning:16/18, 〜部（ぶ） department, club, category
-errors: 6, reading: 18/19, meaning:18/23, 交じる（まじる） to be mixed
-errors: 6, reading: 15/20, meaning:15/16, 住む（すむ） to live, to dwell, to reside
-errors: 6, reading: 11/13, meaning:11/15, 向こう（むこう） opposite side, over there, other side, far away
 errors: 6, reading: 15/20, meaning:15/16, 君（きみ） you, buddy
-errors: 6, reading: 16/19, meaning:16/19, 場合（ばあい） case, circumstance, situation
-errors: 6, reading: 13/15, meaning:13/17, 会話（かいわ） conversation, dialog
-errors: 6, reading: 16/20, meaning:16/18, 出所（しゅっしょ） source, origin, place of origin
-errors: 6, reading: 15/21, meaning:15/15, 人数（にんずう） the number of people, number of people, the amount of people, amount of people
-errors: 6, reading: 16/22, meaning:16/16, 身（み） body, oneself
+errors: 6, reading: 14/16, meaning:14/18, 会話（かいわ） conversation, dialog
 errors: 6, reading: 16/20, meaning:16/18, 返事（へんじ） reply, response
-errors: 6, reading: 13/17, meaning:13/15, 名物（めいぶつ） famous product, special product, famous goods, special goods, famous item, special item
-errors: 6, reading: 12/15, meaning:12/15, 発見（はっけん） discovery
-errors: 6, reading: 11/14, meaning:11/14, 落ちる（おちる） to fall down, to drop, to fall
 errors: 6, reading: 20/23, meaning:20/23, 名（な） name, reputation
 errors: 6, reading: 13/15, meaning:13/17, 間に合う（まにあう） to be in time for, to make it on time, to be on time for
-errors: 6, reading: 12/18, meaning:12/12, 支度（したく） preparation, arrangements
 errors: 6, reading: 12/17, meaning:12/13, 表（おもて） front, surface, exterior, face, outside, appearance
+errors: 5, reading: 14/18, meaning:14/15, 女王（じょおう） queen
+errors: 5, reading: 15/19, meaning:15/16, 姉（あね） older sister, big sister, elder sister
+errors: 5, reading: 13/17, meaning:13/14, 見送る（みおくる） to see off
+errors: 5, reading: 14/18, meaning:14/15, 平ら（たいら） flat
+errors: 5, reading: 14/18, meaning:14/15, 負ける（まける） to lose, to be defeated
+errors: 4, reading: 7/9, meaning:7/9, 味方（みかた） ally, supporter, friend
+errors: 4, reading: 8/10, meaning:8/10, 味（あじ） taste, flavor, flavour
+errors: 4, reading: 12/14, meaning:12/14, 空車（くうしゃ） open taxi, free taxi, open cab, free cab, available taxi, vacant taxi, available cab, vacant cab
+errors: 4, reading: 7/9, meaning:7/9, 別人（べつじん） changed man, different person, different man, changed person, new man
+errors: 4, reading: 14/15, meaning:14/17, 売り切れ（うりきれ） sold out, out of stock
+errors: 4, reading: 11/13, meaning:11/13, 工場（こうじょう, こうば） factory
+errors: 4, reading: 13/15, meaning:13/15, 朝日（あさひ） morning sun, rising sun
+errors: 4, reading: 10/13, meaning:10/11, 進む（すすむ） to advance, to go forward, to progress
 
 </pre>
 </div>
